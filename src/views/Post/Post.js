@@ -1,14 +1,18 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Card, Container, Stack, CardContent, Typography, TextField, Input, Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
 
-import Header from "../../components/Header/Header";
-import { connectWallet, getCurrentWalletConnected } from "../../lib/api/wallet";
-import { sendNoteToIPFS } from "../../lib/api/pinata"
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent,Typography, Button, TextField, Container, Stack, Input } from "@mui/material";
+import { sendNoteToIPFS } from "../../lib/api/pinata";
 import { mintNFT } from "../../lib/api/interact";
+import { connectWallet, getCurrentWalletConnected } from "../../lib/api/wallet";
+import Header from "../../components/Header/Header";
+import "./Post.css"
 
 const Post = () => {
-  const [note, setNote] = useState()
+  // pinataに送るようの画像データ
+  const [fileImage, setFileImage] = useState();
+  // 表示用の画像データ
+  const [image, setImage] = useState()
   const [title, setTitle] = useState();
   const [description, setDescription] = useState()
 
@@ -17,17 +21,31 @@ const Post = () => {
 
   const navigate = useNavigate()
 
-  const connectWalletPressed = async () => {
-    const walletResponse = await connectWallet();
-    setStatus(walletResponse.status);
-    setWalletAddress(walletResponse.address);
-  };
+  const onChangeImage = (e) => {
+    setFileImage(e.target.files[0])
+    if(e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+      reader.onload  = (e) => {
+        // console.log(e.target.result)
+        setImage(e.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const GetCurrentWalletConnected = async () => {
     const { address, status } = await getCurrentWalletConnected();
     setWalletAddress(address);
     setStatus(status);
   }
+  useEffect(() => {
+    GetCurrentWalletConnected();
+
+    addWalletListener();
+    }, [])
 
   const addWalletListener = () => {
     if (window.ethereum) {
@@ -54,12 +72,19 @@ const Post = () => {
     }
   }
 
+  const connectWalletPressed = async () => {
+    const walletResponse = await connectWallet();
+    setStatus(walletResponse.status);
+    setWalletAddress(walletResponse.address);
+  };
+
   const handleSubmit = async(e) => {
     e.preventDefault()
     const formData = new FormData();
-    formData.append("file", note);
-    console.log(note)
+    formData.append("file", fileImage);
+    console.log(fileImage)
     const imageUrl = await sendNoteToIPFS(formData)
+    console.log(imageUrl)
 
     // make matadata
     const metadata = new Object();
@@ -75,14 +100,14 @@ const Post = () => {
       if (success) {
         setTitle("");
         setDescription("");
-        setNote("");
+        setFileImage("");
         navigate("/", { state: {message: "投稿しました！"}})
       }
     } catch (error) {
       console.log(error)
     }
   }
-  
+
   return (
     <div className="post">
       <Header />
@@ -113,7 +138,10 @@ const Post = () => {
                     />
                     <Input
                       type="file"
+                      // onChange={(e) => {setFileImage(e.target.files[0])}}
+                      onChange={onChangeImage}
                     />
+                    <img className="post_picture" src={image} alt="写真"/>
                     <TextField
                       placeholder="講義内容"
                       onChange={(e) => {setDescription(e.target.value)}}

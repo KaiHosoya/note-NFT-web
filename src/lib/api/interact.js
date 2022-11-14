@@ -3,14 +3,14 @@ import { pinJSONtoIPFS } from "./pinata";
 require("dotenv")
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
 const contractABI = require("../contract/contract-abi.json");
-const contractAddress = "0x1160e5D51E465AA43B0E27C48dddc90a0A8035dE";
+const contractAddress = "0x07bE4Dec8889987A9B5B9c03C7ed669467d629F9";
 // const contractAddress = "0xd5e8B397f1Aa6059b2f81ef52b26e07B6c1b164c"
 const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
 const web3 = createAlchemyWeb3(alchemyKey);
 
 
 // TODO：　pinataに画像が保存できなかったときに処理を中止する
-export const mintNFT = async (metadata) => {
+export const mintNFT = async (metadata, price) => {
   if (!metadata) {
     return {
       success: false,
@@ -29,15 +29,12 @@ export const mintNFT = async (metadata) => {
   const tokenURI = pinataResponse.pinataUrl;
 
   window.contract = await new web3.eth.Contract(contractABI, contractAddress);
-  console.log("contract is", window.contract)
-
-  // console.log(window.ethereum.selectedAddress)
 
   const transactionParameters = {
     to: contractAddress, // Required except during contract publications.
     from: window.ethereum.selectedAddress, // must match user's active address.
     data: window.contract.methods
-      .mintNFT(window.ethereum.selectedAddress, tokenURI)
+      .noteMint(tokenURI, 0)
       .encodeABI(),
   };
   console.log("--------------")
