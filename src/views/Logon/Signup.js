@@ -1,12 +1,16 @@
 import React, { useContext, useState } from "react";
+
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Grid, Paper, Avatar, Typography, Box, Button, TextField } from "@mui/material";
+
 import { teal } from "@mui/material/colors";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import "./Signup.css"
 import { useNavigate } from "react-router-dom";
+
 import { auth } from "../../lib/api/firebase";
+
 import { authContext } from "../../App";
 
 const Signup = () => {
@@ -18,8 +22,10 @@ const Signup = () => {
   const navigate = useNavigate()
   const { setUser } = useContext(authContext)
 
+
   const handleSubmit = async(e) => {
     e.preventDefault()
+
 
     await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
@@ -32,6 +38,7 @@ const Signup = () => {
     .catch((err) => {
       console.log(err)
     })
+
   }
 
   return (

@@ -1,6 +1,8 @@
+
 import React, { createContext, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { auth } from "./lib/api/firebase";
+
 
 import Login from "./views/Logon/Login";
 import Signup from "./views/Logon/Signup";
@@ -28,6 +30,7 @@ const APP = () => {
     <BrowserRouter>
     <authContext.Provider value={{user, setUser}}>
         <Routes>
+
           <Route path="/login" element={ <Login />} />
           <Route path="/signup" element={ <Signup />} />
           <Route path="/" element={ <NoteList />} />
