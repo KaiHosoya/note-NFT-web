@@ -1,4 +1,4 @@
-import * as React from 'react';
+import  React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import List from '@mui/material/List';
@@ -12,9 +12,12 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import InfoIcon from '@mui/icons-material/Info';
 
 import Header from '../../components/Header/Header';
+import { authContext } from '../../App';
 
 export default function NoteList() {
   const navigate = useNavigate()
+  const { currentUser } = useContext(authContext)
+  console.log(currentUser)
   return (
     <div>
       <Header />

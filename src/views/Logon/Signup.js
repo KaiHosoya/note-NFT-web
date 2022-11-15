@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Cookies from "js-cookie"
 import { Grid, Paper, Avatar, Typography, Box, Button, Link, TextField } from "@mui/material";
 import { teal } from "@mui/material/colors";
@@ -7,6 +7,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import "./Signup.css"
 import { signUp } from "../../lib/api/user";
 import { useNavigate } from "react-router-dom";
+import { authContext } from "../../App";
 
 const Signup = () => {
   const [name, setName] = useState()
@@ -15,6 +16,7 @@ const Signup = () => {
   const [confirmation, setConfirmation] = useState("")
 
   const navigate = useNavigate()
+  const { setCurrentUser } = useContext(authContext)
 
   const handleSubmit = async(e) => {
     e.preventDefault()
@@ -36,7 +38,7 @@ const Signup = () => {
         Cookies.set("_client", res.headers["client"])
         Cookies.set("_uid", res.headers["uid"])
 
-        // setCurrentUser(res.data.data)
+        setCurrentUser(res.data.data)
         navigate("/")
       }
     } catch (error) {
