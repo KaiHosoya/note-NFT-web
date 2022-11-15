@@ -2,8 +2,12 @@ import { Avatar, Typography, List, ListItem, ListItemAvatar, Divider, ListItemTe
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
+import { test } from "../../lib/api/interact";
+import { apiTest } from "../../lib/api/user";
 
 const Profile = () => {
+  // test()
+  apiTest()
   const navigate = useNavigate()
   return (
     <div>

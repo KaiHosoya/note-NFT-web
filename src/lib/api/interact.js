@@ -71,90 +71,10 @@ export const tokenURI = async(id) => {
 }
 
 // 全てのNFTのURIを取得
-export const allTokenURIs = async() => {
+export const allNoteURIs = async() => {
   window.contract = await new web3.eth.Contract(contractABI, contractAddress);
-  const counts =
-  await window.contract.methods.latest_tokenId().call()
+  const response = await window.contract.methods.getAllListedNotes().call()
   .then((res) => {
-    return(res)
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-  const URIs = Array()
-  for (let i = 0; i < counts; i++) {
-    await tokenURI(i)
-    .then((res) => {
-      axios
-        .get(res)
-        .then((res) => {
-          URIs.push(res.data)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
-  return URIs
-}
-
-// 特定のアドレスが所有しているNFTのURIを取得
-export const ownerTokenURIs = async(walletAddress) => {
-  window.contract = await new web3.eth.Contract(contractABI, contractAddress);
-  const counts =
-  await window.contract.methods.balanceOf(walletAddress).call()
-  .then((res) => {
-    return res
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-  const URIs = Array()
-  for (let i = 0; i < counts; i++) {
-    await tokenURI(i)
-      .then((res) => {
-        // console.log(res);
-        axios
-          .get(res)
-          .then((res) => {
-            // console.log(res.data);
-            URIs.push(res.data)
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-  return URIs
-}
-
-export const transferNFT = async(walletAddress ,tokenId) => {
-  window.contract = await new web3.eth.Contract(contractABI, contractAddress)
-  const OwnerAddress = await getOwner(tokenId)
-  console.log("wallet address is: ", walletAddress)
-  console.log("owner address is: ", OwnerAddress)
-  await window.contract.methods.TransferNFT(OwnerAddress, walletAddress, tokenId).call()
-  .then((res) => {
-    console.log(res)
-    return res
-  })
-  .catch((err) => {
-    console.log(err)
-    return err
-  })
-}
-
-export const getOwner = async(id) => {
-  window.contract = await new web3.eth.Contract(contractABI, contractAddress)
-  const response = await window.contract.methods.ownerOf(id).call()
-  .then((res) => {
-    console.log(res)
     return res
   })
   .catch((err) => {
@@ -163,20 +83,23 @@ export const getOwner = async(id) => {
   return response
 }
 
-export const getLatestTokenId = async() => {
-  window.contract = await new web3.eth.Contract(contractABI, contractAddress)
-  await window.contract.methods.latest_tokenId().call()
+// 特定のアドレスが所有しているNFTのURIを取得
+export const myNoteURIs = async(walletAddress) => {
+  window.contract = await new web3.eth.Contract(contractABI, contractAddress);
+  const response = await window.contract.methods.getMyNotes().call()
   .then((res) => {
     return res
   })
   .catch((err) => {
     console.log(err)
   })
+
+  return response
 }
 
 export const test = async() => {
   window.contract = await new web3.eth.Contract(contractABI, contractAddress)
-  await window.contract.methods.latest_tokenId().call()
+  await window.contract.methods.getListPrice().call()
   .then((res) => {
     console.log(res)
   })
@@ -184,5 +107,5 @@ export const test = async() => {
     console.log(err)
   })
 
-  // console.log(window.contract.methods)
+  console.log(window.contract.methods)
 }

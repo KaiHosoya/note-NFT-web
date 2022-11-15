@@ -22,7 +22,7 @@ const NoteDetail = () => {
         <Card sx={{ maxWidth: 800 }}>
           <CardMedia
             component="img"
-            src="https://c.neevacdn.net/image/fetch/s--IvMEad_d--/https%3A//cdn.clearnotebooks.com/uploads/page/file/3299052/file.jpg?savepath=file.jpg"
+            src="https://i.pinimg.com/474x/08/5c/37/085c37abbf5bc4bc5eff8462b85979e2.jpg"
           />
           <CardActions>
             {isOwner ? (

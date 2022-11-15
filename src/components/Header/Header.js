@@ -1,7 +1,6 @@
 import React from "react"
 import { useState } from "react";
 import { AppBar, Typography, Button, Toolbar, Box, IconButton, Container, Tooltip, Menu, MenuItem, Avatar } from "@mui/material"
-import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from "react-router-dom";
 
@@ -99,7 +98,6 @@ const Header = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -116,7 +114,6 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((value, key) => (
