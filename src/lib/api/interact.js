@@ -1,11 +1,14 @@
+import Web3 from "web3";
 import { pinJSONtoIPFS } from "./pinata";
 require("dotenv")
-const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
+// const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
 const contractABI = require("../contract/contract-abi.json");
-const contractAddress = "0x07bE4Dec8889987A9B5B9c03C7ed669467d629F9";
-// const contractAddress = "0xd5e8B397f1Aa6059b2f81ef52b26e07B6c1b164c"
-const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
-const web3 = createAlchemyWeb3(alchemyKey);
+// const contractAddress = "0x07bE4Dec8889987A9B5B9c03C7ed669467d629F9";
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+// const { createAlchemyWeb3 } = require("@alch/alchemy-web3");
+// const web3 = createAlchemyWeb3(alchemyKey);
+
+const web3 = new Web3("http://127.0.0.1:8545/")
 
 
 // TODO：　pinataに画像が保存できなかったときに処理を中止する
@@ -74,6 +77,7 @@ export const allNoteURIs = async() => {
   window.contract = await new web3.eth.Contract(contractABI, contractAddress);
   const response = await window.contract.methods.getAllListedNotes().call()
   .then((res) => {
+    console.log(res)
     return res
   })
   .catch((err) => {

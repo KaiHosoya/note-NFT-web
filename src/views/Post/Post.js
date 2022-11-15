@@ -156,16 +156,16 @@ const Post = () => {
                       onChange={(e) => {setPrice(e.target.value)}}
                       endAdornment={<InputAdornment position="start">ETH</InputAdornment>}
                     />
-                    <Button
-                      className="post_button"
-                      type="submit"
-                    >
-                      投稿
-                    </Button>
                 </Stack>
                 {/* </CardActions> */}
               </Container>
           </Card>
+          <Button
+            className="post_button"
+            type="submit"
+          >
+            投稿
+          </Button>
         </form>
         {status}
       </div>
