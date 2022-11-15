@@ -1,47 +1,37 @@
-import React, { useState } from "react";
-import Cookies from "js-cookie"
+import React, { useContext, useState } from "react";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Grid, Paper, Avatar, Typography, Box, Button, Link, TextField } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import "./Signup.css"
-import { signUp } from "../../lib/api/user";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../../lib/api/firebase";
+import { authContext } from "../../App";
 
 const Signup = () => {
   const [name, setName] = useState()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [confirmation, setConfirmation] = useState("")
+  // const [confirmation, setConfirmation] = useState("")
 
   const navigate = useNavigate()
+  const { user, setUser } = useContext(authContext)
 
   const handleSubmit = async(e) => {
     e.preventDefault()
-    const params = {
-      name: name,
-      email: email,
-      password: password,
-      passwordConfirmation: confirmation
-    }
-    console.log(params)
-    try {
-      const res = await signUp(params)
-      console.log(res)
-      if (res?.status === 200) {
-        // アカウント作成と同時にログインさせてしまう
-        // 本来であればメール確認などを挟むべきだが、今回はサンプルなので
-        console.log(res)
-        Cookies.set("_access_token", res.headers["access-token"])
-        Cookies.set("_client", res.headers["client"])
-        Cookies.set("_uid", res.headers["uid"])
 
-        // setCurrentUser(res.data.data)
-        navigate("/")
-      }
-    } catch (error) {
-      console.log(error)
-    }
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      updateProfile(auth.currentUser, {
+        displayName: name
+      })
+      setUser(userCredential.user)
+      navigate("/")
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   }
 
   return (
@@ -54,7 +44,7 @@ const Signup = () => {
             p: 4,
             height: "70vh",
             width: "50vw",
-            m: "20px auto"
+            m: "0px auto"
           }}
         >
         <Grid
@@ -91,22 +81,6 @@ const Signup = () => {
             required
             onChange={(e) => {setPassword(e.target.value)}}
           />
-
-          <TextField
-            type="password"
-            label="Passwordの確認"
-            variant="standard"
-            fullWidth
-            required
-            onChange={(e) => {setConfirmation(e.target.value)}}
-          />
-
-          {/* ラベルとチェックボックス */}
-          {/* <FormControlLabel
-            labelPlacement="end"
-            label="パスワードを忘れました"
-            control={<Checkbox name="checkboxA" size="small" color="primary" />}
-          /> */}
           <Box mt={3}>
             <Button
               type="submit" 
@@ -122,7 +96,10 @@ const Signup = () => {
             </Typography> */}
             <Typography variant="caption" display="block">
               アカウントを持っていますか？
-              <Link to="/login">ログイン</Link>
+              <Button onClick={() => {navigate("/login")}}>ログイン</Button>
+            </Typography>
+            <Typography>
+              {user.email}
             </Typography>
           </Box>
         </form>

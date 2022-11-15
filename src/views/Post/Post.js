@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent,Typography, Button, TextField, Container, Stack, Input } from "@mui/material";
+import { Card, CardContent,Typography, Button, TextField, Container, Stack, Input, OutlinedInput, InputAdornment } from "@mui/material";
 import { sendNoteToIPFS } from "../../lib/api/pinata";
 import { mintNFT } from "../../lib/api/interact";
 import { connectWallet, getCurrentWalletConnected } from "../../lib/api/wallet";
@@ -15,6 +15,7 @@ const Post = () => {
   const [image, setImage] = useState()
   const [title, setTitle] = useState();
   const [description, setDescription] = useState()
+  const [price, setPrice] = useState(1)
 
   const [walletAddress, setWalletAddress] = useState();
   const [status, setStatus] = useState();
@@ -95,7 +96,7 @@ const Post = () => {
     console.log(metadata)
 
     try {
-      const { success, status } = await mintNFT(metadata); 
+      const { success, status } = await mintNFT(metadata, price); 
       setStatus(status)
       if (success) {
         setTitle("");
@@ -147,6 +148,13 @@ const Post = () => {
                       onChange={(e) => {setDescription(e.target.value)}}
                       // variant="standard" 
                       fullWidth required
+                    />
+                    {/* <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel> */}
+                    <OutlinedInput
+                      value={price}
+                      // label="Price"
+                      onChange={(e) => {setPrice(e.target.value)}}
+                      endAdornment={<InputAdornment position="start">ETH</InputAdornment>}
                     />
                     <Button
                       className="post_button"

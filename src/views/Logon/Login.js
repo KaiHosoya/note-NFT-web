@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Grid, Paper, Avatar, Typography, Box, Button, Link, TextField } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import "./Login.css"
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../lib/api/firebase";
+import { authContext } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const [ email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const { setUser } = useContext(authContext)
+  const navigate = useNavigate()
+
+  const handleSubmit = async(e) => {
+    e.preventDefault()
+    await signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      setUser(userCredential.user)
+      navigate("/")
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
+
   return (
     <div>
       <div className="LoginContent">
@@ -16,7 +37,7 @@ const Login = () => {
             p: 4,
             height: "70vh",
             width: "50vw",
-            m: "20px auto"
+            m: "0 auto"
           }}
         >
         <Grid
@@ -32,32 +53,31 @@ const Login = () => {
             ログイン
           </Typography>
         </Grid>
-        <form>
-          <TextField label="Email" variant="standard" fullWidth required />
+        <form onSubmit={handleSubmit}>
+          <TextField 
+            label="Email" 
+            variant="standard" 
+            fullWidth required 
+            onChange={(e) => {setEmail(e.target.value)}}
+          />
           <TextField
             type="password"
             label="Password"
             variant="standard"
             fullWidth
             required
+            onChange={(e) => {setPassword(e.target.value)}}
           />
-          {/* ラベルとチェックボックス */}
-          {/* <FormControlLabel
-            labelPlacement="end"
-            label="パスワードを忘れました"
-            control={<Checkbox name="checkboxA" size="small" color="primary" />}
-          /> */}
           <Box mt={3}>
             <Button type="submit" color="primary" variant="contained" fullWidth>
               ログイン
             </Button>
-
-            {/* <Typography variant="caption">
-              <Link href="#">パスワードを忘れましたか？</Link>
-            </Typography> */}
             <Typography variant="caption" display="block">
               アカウントを持っていますか？
-              <Link to="/signup">アカウントを作成</Link>
+              {/* <Link to="/signup">アカウントを作成</Link> */}
+              <Button onClick={() => {navigate("/signup")}}>
+                アカウントを作成
+              </Button>
             </Typography>
           </Box>
         </form>
