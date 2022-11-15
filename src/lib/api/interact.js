@@ -1,4 +1,3 @@
-import axios from "axios";
 import { pinJSONtoIPFS } from "./pinata";
 require("dotenv")
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
@@ -34,7 +33,7 @@ export const mintNFT = async (metadata, price) => {
     to: contractAddress, // Required except during contract publications.
     from: window.ethereum.selectedAddress, // must match user's active address.
     data: window.contract.methods
-      .noteMint(tokenURI, 0)
+      .noteMint(tokenURI, price)
       .encodeABI(),
   };
   console.log("--------------")

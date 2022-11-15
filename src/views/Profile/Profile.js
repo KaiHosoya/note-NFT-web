@@ -1,27 +1,31 @@
 import { Avatar, Typography, List, ListItem, ListItemAvatar, Divider, ListItemText } from "@mui/material";
-import React from "react";
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { authContext } from "../../App";
 import Header from "../../components/Header/Header";
-import { test } from "../../lib/api/interact";
-import { apiTest } from "../../lib/api/user";
+import "./Profile.css"
 
 const Profile = () => {
-  // test()
-  apiTest()
   const navigate = useNavigate()
+  const { user } = useContext(authContext)
+  console.log(user)
   return (
     <div>
-      <Header/>
+    <Header/>
       <div>
-        <div>
+        <div className="profileInfo">
           <Avatar
-            alt="user profile icon" 
-            src="https://i.seadn.io/gae/wMl4j3hFxn171C6mY7nyCsbzb6yQiYZMB3euhfvjW7KK9wrcR1eqBnJYMxSM42CiMLxAu_EM6goYjFcZxuXXe8C1PUgIKF_OWPRS?auto=format&w=750"
-            sx={{ width: 200, height: 200 }}
+            alt={user.displayName}
+            src={user.photoURL}
+            sx={{ width: 200, height: 200, justifyContent: "center" }}
           />
-          <Typography>
-            Kai Hosoya
-          </Typography>
+          <React.Fragment>
+            <Typography sx={{ display: 'inline' }}>
+              {user?.displayName}
+            </Typography >
+            <ModeEditIcon onClick={() => {navigate("/profile/detail")}}/>
+          </React.Fragment>
         </div>
         <div>
           <List sx={{ width: '100%', maxWidth: "100vw", bgcolor: 'background.paper' }}>

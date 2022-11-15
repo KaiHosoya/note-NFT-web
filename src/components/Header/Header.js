@@ -1,11 +1,15 @@
-import React from "react"
+import React, { useContext } from "react"
 import { useState } from "react";
 import { AppBar, Typography, Button, Toolbar, Box, IconButton, Container, Tooltip, Menu, MenuItem, Avatar } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth";
+import { auth } from "../../lib/api/firebase";
+import { authContext } from "../../App";
 
 
 const Header = () => {
+  const { user } = useContext(authContext)
   const navigate = useNavigate()
   const pages = [
     {
@@ -22,17 +26,15 @@ const Header = () => {
     }
   ]
 
-  const settings = [
-    {
-      title: "Profile",
-      link: "/profile"
-    },
-    {
-      title: "Logout",
-      // 処理分からん
-      link: "/"
-    }
-  ]
+  const signout = async() => {
+    signOut(auth)
+    .then(() => {
+      navigate("/login")
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -130,7 +132,7 @@ const Header = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="https://i.seadn.io/gae/wMl4j3hFxn171C6mY7nyCsbzb6yQiYZMB3euhfvjW7KK9wrcR1eqBnJYMxSM42CiMLxAu_EM6goYjFcZxuXXe8C1PUgIKF_OWPRS?auto=format&w=750" />
+                <Avatar alt="Remy Sharp" src={user.photoURL} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -149,11 +151,12 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((value, key) => (
-                <MenuItem key={key} onClick={() => {navigate(value.link)}}>
-                  <Typography textAlign="center">{value.title}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem  onClick={() => {navigate("/profile")}}>
+                <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem  onClick={() => {signout()}}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
