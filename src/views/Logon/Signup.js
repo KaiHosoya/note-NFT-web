@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { Grid, Paper, Avatar, Typography, Box, Button, Link, TextField } from "@mui/material";
+import { Grid, Paper, Avatar, Typography, Box, Button, TextField } from "@mui/material";
 import { teal } from "@mui/material/colors";
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
@@ -16,7 +16,7 @@ const Signup = () => {
   // const [confirmation, setConfirmation] = useState("")
 
   const navigate = useNavigate()
-  const { user, setUser } = useContext(authContext)
+  const { setUser } = useContext(authContext)
 
   const handleSubmit = async(e) => {
     e.preventDefault()
@@ -97,9 +97,6 @@ const Signup = () => {
             <Typography variant="caption" display="block">
               アカウントを持っていますか？
               <Button onClick={() => {navigate("/login")}}>ログイン</Button>
-            </Typography>
-            <Typography>
-              {user.email}
             </Typography>
           </Box>
         </form>

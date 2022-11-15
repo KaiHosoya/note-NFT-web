@@ -1,7 +1,7 @@
 import { Avatar, Typography, List, ListItem, ListItemAvatar, Divider, ListItemText } from "@mui/material";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import React, { useContext } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { authContext } from "../../App";
 import Header from "../../components/Header/Header";
 import "./Profile.css"
@@ -11,8 +11,6 @@ const Profile = () => {
   const { user } = useContext(authContext)
   console.log(user)
   return (
-    <>
-      { user ? (
     <div>
     <Header/>
       <div>
@@ -58,11 +56,6 @@ const Profile = () => {
         </div>
       </div>
     </div>
-      ) : (
-        <Navigate to="/login" />
-      )}
-    </>
-
   )
 }
 
